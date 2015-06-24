@@ -18,14 +18,19 @@
 
 - (void)setPhoneNumber:(NSString *)phoneNumber;
 - (NSString *)phoneNumber;
+
+- (void)changePersonsName:(Person *) aPerson
+                   toName:(NSString *) newName;
+
 - (BOOL)checkSameCity:(Person *) name;
+
 - (Person*)registerChild;
 
 @end
 
 @implementation Person {
-    NSString *_name;
-    NSString *_phoneNumber;
+    NSString *_name;            //can be access from anywhere in your class -- might have to be selective later
+    NSString *_phoneNumber;     //can't be accessed from instance variable?
     NSString *_city;
 }
 
@@ -53,9 +58,15 @@
     return _phoneNumber;
 }
 
+- (void)changePersonsName:(Person *) aPerson toName:(NSString *) newName{
+    
+    [aPerson setName:newName];
+    
+}
+
 - (BOOL)checkSameCity:(Person *) name{
     
-    if ([name city] == _city) {
+    if ([[name city] isEqualToString:[self city]]) {
         return YES;
     }
     else{
@@ -66,9 +77,9 @@
 
 - (Person*)registerChild{
     Person* child = [[Person alloc]init];
-    child.phoneNumber = _phoneNumber;
-    child.city = _city;
-    
+    [child setPhoneNumber:[ self phoneNumber]];
+    [child setCity: [self city]];
+
     return child;
 
 }
@@ -79,7 +90,7 @@
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         
-        Person *Henna = [[Person alloc]init];
+        Person *Henna = [[Person alloc]init];   //allocates memory and initializes a Person object
         [Henna setName: @"Henna"];
         [Henna setCity: @"New York"];
         [Henna setPhoneNumber: @"7187777777"];
@@ -104,6 +115,7 @@ int main(int argc, const char * argv[]) {
         
         Person *Abc = [Henna registerChild];
         [Abc setName:@"Abc"];
+        NSLog(@"%@'s baby, %@, lives in %@ and it's phone number is %@", [Henna name], [Abc name], [Abc city], [Abc phoneNumber]);
 
         
         
